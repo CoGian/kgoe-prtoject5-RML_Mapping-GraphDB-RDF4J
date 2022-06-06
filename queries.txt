@@ -23,3 +23,12 @@ ORDER BY DESC(?avg)
 LIMIT 1
 
 
+PREFIX ex: <http://www.semanticweb.org/kgiantsios/ontologies/2022/5/imdb#>
+SELECT ?name (AVG(?runtimeMinutes) AS ?avgRuntimeMinutes)
+WHERE {
+    ?actor a ex:Actor;
+           ex:primaryName ?name;
+           ex:knownForTitles ?movie.
+    ?movie ex:runtimeMinutes ?runtimeMinutes
+}
+GROUP BY ?name
