@@ -1,0 +1,140 @@
+@prefix rr: <http://www.w3.org/ns/r2rml#>.
+@prefix rml: <http://semweb.mmlab.be/ns/rml#>.
+@prefix ql: <http://semweb.mmlab.be/ns/ql#>.
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#>.
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>.
+@prefix schema: <http://schema.org/> .
+@prefix dc: <http://purl.org/dc/terms/>.
+@prefix lcc-3166-1: <https://www.omg.org/spec/LCC/Countries/ISO3166-1-CountryCodes/> .
+@prefix lcc-lr: <https://www.omg.org/spec/LCC/Languages/LanguageRepresentation/> .
+@prefix domain: <http://www.semanticweb.org/kgiantsios/ontologies/2022/5/imdb#>.
+@prefix csvw: <http://www.w3.org/ns/csvw#> .
+
+@base <http://www.semanticweb.org/kgiantsios/ontologies/2022/5/imdb/data/> .
+
+
+<#MovieMapping> a rr:TriplesMap;
+            rml:logicalSource [
+                rml:source [
+                             a csvw:Table;
+                             csvw:url "movies.tsv";
+                             csvw:dialect [
+                                 a csvw:Dialect;
+                                 csvw:delimiter "\t"
+                               ]
+                           ];
+                rml:referenceFormulation ql:CSV
+              ];
+
+  rr:subjectMap[
+                 rr:template "http://www.semanticweb.org/kgiantsios/ontologies/2022/5/imdb/{tconst}";
+                 rr:class domain:Movie
+  ];
+
+  rr:predicateObjectMap [
+    rr:predicate domain:titleType;
+    rr:objectMap [
+      rml:reference "titleType"
+    ]
+  ];
+
+  rr:predicateObjectMap [
+    rr:predicate domain:startYear;
+    rr:objectMap [
+      rml:reference "startYear";
+      rr:datatype xsd:integer
+    ]
+  ];
+
+  rr:predicateObjectMap [
+    rr:predicate domain:runtimeMinutes;
+    rr:objectMap [
+      rml:reference "runtimeMinutes";
+      rr:datatype xsd:integer
+    ]
+  ];
+
+  rr:predicateObjectMap [
+    rr:predicate domain:primaryTitle;
+    rr:objectMap [
+      rml:reference "primaryTitle";
+    ]
+  ].
+
+<#RatingMapping> a rr:TriplesMap;
+                rml:logicalSource [
+                    rml:source [
+                                 a csvw:Table;
+                                 csvw:url "ratings.tsv";
+                                 csvw:dialect [
+                                     a csvw:Dialect;
+                                     csvw:delimiter "\t"
+                                   ]
+                               ];
+                    rml:referenceFormulation ql:CSV
+                  ];
+
+                rr:subjectMap[
+                    rr:template "http://www.semanticweb.org/kgiantsios/ontologies/2022/5/imdb/rating_{id}";
+                    rr:class domain:Rating
+                  ];
+
+
+                rr:predicateObjectMap [
+                    rr:predicate domain:average;
+                    rr:objectMap [
+                                   rml:reference "average";
+                                   rr:datatype xsd:double
+                                 ]
+                  ];
+
+                rr:predicateObjectMap [
+                    rr:predicate domain:total;
+                    rr:objectMap [
+                                   rml:reference "total";
+                                   rr:datatype xsd:integer
+                                 ]
+                  ];
+
+  rr:predicateObjectMap [
+    rr:predicate domain:ratingFor;
+    rr:objectMap [
+      rr:template "http://www.semanticweb.org/kgiantsios/ontologies/2022/5/imdb/{id}";
+    ]
+  ].
+
+
+<#ActorMapping> a rr:TriplesMap;
+                 rml:logicalSource [
+                                     rml:source "actors.json";
+                                     rml:referenceFormulation ql:JSONPath;
+                                     rml:iterator "$.actors[*]"
+                   ];
+
+                 rr:subjectMap[
+                     rr:template "http://www.semanticweb.org/kgiantsios/ontologies/2022/5/imdb/{id}";
+                     rr:class domain:Actor
+                   ];
+
+
+                 rr:predicateObjectMap [
+                     rr:predicate domain:primaryName;
+                     rr:objectMap [
+                                    rml:reference "primaryName";
+                                  ]
+                   ];
+
+                 rr:predicateObjectMap [
+                     rr:predicate domain:birthYear;
+                     rr:objectMap [
+                                    rml:reference "birthYear";
+                                    rr:datatype xsd:integer
+                                  ]
+                   ];
+
+                rr:predicateObjectMap [
+                                        rr:predicate domain:knownForTitles;
+                                        rr:objectMap [ # Mapping arrays can also be done
+                                                       rr:template "http://www.semanticweb.org/kgiantsios/ontologies/2022/5/imdb/{knownForTitles.[*]}";
+                                                     ];
+                                      ].

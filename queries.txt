@@ -1,0 +1,25 @@
+PREFIX ex: <http://www.semanticweb.org/kgiantsios/ontologies/2022/5/imdb#>
+SELECT ?title ?total
+WHERE {
+    ?movie a ex:Movie;
+    		ex:primaryTitle ?title.
+	?rating ex:ratingFor ?movie.
+	?rating ex:total ?total
+}
+ORDER BY DESC(?total)
+LIMIT 1
+
+PREFIX ex: <http://www.semanticweb.org/kgiantsios/ontologies/2022/5/imdb#>
+SELECT ?name (AVG(?average) AS ?avg)
+WHERE {
+    ?actor a ex:Actor;
+           ex:primaryName ?name;
+           ex:knownForTitles ?movie.
+    ?rating ex:ratingFor ?movie;
+            ex:average ?average.
+}
+GROUP BY ?name
+ORDER BY DESC(?avg)
+LIMIT 1
+
+
