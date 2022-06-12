@@ -91,7 +91,7 @@ public class GraphDBExample {
 
         TupleQuery query3 = connection.prepareTupleQuery(queryString3);
 
-        System.out.println("Actor with avg movie runtime:");
+        System.out.println("Actors with avg movie runtime:");
 
         // A QueryResult is also an AutoCloseable resource, so make sure it gets closed when done.
         try (TupleQueryResult result = query3.evaluate()) {
